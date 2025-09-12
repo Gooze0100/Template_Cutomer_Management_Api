@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Diagnostics;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -14,11 +16,9 @@ public static class Config
 {
     public static void AddConfiguration(this WebApplicationBuilder builder)
     {
-        var separator = Path.DirectorySeparatorChar;
-
         builder.Configuration
-            .AddJsonFile($"Config{separator}appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"Config{separator}appsettings.{builder.Environment.EnvironmentName}.json", true);
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true);
     }
 
     public static void AddSettings(this WebApplicationBuilder builder)
@@ -33,7 +33,10 @@ public static class Config
     
     public static void AddOpenApiServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddOpenApi();
+        builder.Services.AddOpenApi(options =>
+        {
+            options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+        });
     }
 
     public static void AddDatabase(this WebApplicationBuilder builder)
@@ -49,24 +52,33 @@ public static class Config
                 {
                     contextOptionsBuilder.MigrationsHistoryTable(Infrastructure.Tables.MigrationTable, Infrastructure.Schemas.Dbo);
                 });
-
+            
             optionsBuilder.UseAsyncSeeding(GenericSeed.Seed);
         });
     }
     
     public static void AddAuthentication(this WebApplicationBuilder builder)
     {
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(a =>
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtOptions =>
         {
-            a.TokenValidationParameters = new TokenValidationParameters
+            string[] validIssuers = builder.Configuration
+                .GetSection($"{Constants.Config.AuthenticationBearerSectionKey}:ValidIssuers").Get<string[]>();
+
+            string[] validAudiences = builder.Configuration
+                .GetSection($"{Constants.Config.AuthenticationBearerSectionKey}:ValidAudiences").Get<string[]>();
+            
+            string issuerSigningKey = builder.Configuration
+                .GetSection($"{Constants.Config.AuthenticationBearerSectionKey}:IssuerSigningKey").Get<string>();
+            
+            jwtOptions.TokenValidationParameters = new TokenValidationParameters
             {
-                IssuerSigningKey = new SymmetricSecurityKey("GreatNowYouJustNeedToStoreAndLoadThisSecurely"u8.ToArray()),
-                ValidIssuer = "https://id.localhost:5081",
-                ValidAudience = "https://localhost:5081",
-                ValidateIssuerSigningKey = true,
-                ValidateLifetime = true,
                 ValidateIssuer = true,
-                ValidateAudience = true
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuers = validIssuers,
+                ValidAudiences = validAudiences,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(issuerSigningKey))
             };
         });
         
@@ -124,7 +136,7 @@ public static class Config
             app.MapScalarApiReference(options =>
             {
                 options.Title = "Template Management Api";
-                options.Theme = ScalarTheme.Moon;
+                options.Theme = ScalarTheme.DeepSpace;
                 options.Layout = ScalarLayout.Modern;
                 options.HideClientButton = true;
                 
@@ -149,5 +161,10 @@ public static class Config
     {
         app.UseAuthentication();
         app.UseAuthorization();
+    }
+    
+    public static void UseCache(this WebApplication app)
+    {
+        app.UseOutputCache();
     }
 }

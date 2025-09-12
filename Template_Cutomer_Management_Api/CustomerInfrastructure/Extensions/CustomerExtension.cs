@@ -19,7 +19,8 @@ public static class CustomerExtension
             .IsRequired();
         
         entity.Property(e => e.Email)
-            .IsRequired();
+            .IsRequired()
+            .IsUnicode(false);
 
         entity.Property(p => p.DeletedAt)
             .IsRequired(false);

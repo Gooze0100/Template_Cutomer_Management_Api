@@ -13,11 +13,39 @@ public static class ResultExtensions
 
         return result.ToResponse();
     }
+    
     private static IResult ToResponse(this UnitResult<Exception> result)
     {
         if (result.IsSuccess)
         {
             return Results.Ok();
+        }
+
+        if (result.Error is NoContentException)
+        {
+            return Results.NoContent();
+        }
+        
+        if (result.Error is NotFoundException)
+        {
+            return Results.NotFound();
+        }
+
+        return Results.InternalServerError();
+    }
+    
+    public static async Task<IResult> ToResponse<T>(this Task<Result<T, Exception>> task)
+    {
+        var result = await task;
+
+        return result.ToResponse();
+    }
+    
+    public static IResult ToResponse<T>(this Result<T, Exception> result)
+    {
+        if (result.IsSuccess)
+        {
+            return Results.Ok(result.Value);
         }
 
         if (result.Error is NoContentException)

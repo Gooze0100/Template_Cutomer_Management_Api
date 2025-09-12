@@ -7,6 +7,12 @@ public class GenericSeed
 {
     public static async Task Seed(DbContext context, bool b, CancellationToken ct)
     {
+        bool hasCustomers = await context.Set<Customer>().AnyAsync(ct);
+        if (hasCustomers)
+        {
+            return;
+        }
+        
         var date = DateTime.UtcNow;
 
         for (int i = 0; i <= 5; i++)

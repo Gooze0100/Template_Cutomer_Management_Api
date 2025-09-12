@@ -7,6 +7,12 @@ public class GenericSeed
 {
     public static async Task Seed(DbContext context, bool b, CancellationToken ct)
     {
+        bool hasTemplates = await context.Set<Template>().AnyAsync(ct);
+        if (hasTemplates)
+        {
+            return;
+        }
+        
         var date = DateTime.UtcNow;
 
         for (int i = 0; i <= 5; i++)
@@ -23,8 +29,9 @@ public class GenericSeed
                 UpdatedBy = "SYSTEM",
                 UpdatedById = 1
             });
+            
         }
-        
+    
         await context.SaveChangesAsync(ct);
     }
 }

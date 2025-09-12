@@ -21,15 +21,14 @@ public class EfContextDesignFactory : IDesignTimeDbContextFactory<DatabaseContex
 
     private static string GetDefaultConnectionString()
     {
-        const string projectName = "Api";
+        const string projectName = "CustomerManagementApi";
         const string databaseName = "CustomerInfrastructure";
         char separator = Path.DirectorySeparatorChar;
 
         var path = AppContext.BaseDirectory.Replace($"{separator}{databaseName}{separator}bin{separator}",
             $"{separator}{projectName}{separator}bin{separator}", StringComparison.OrdinalIgnoreCase);
-        path += $"Config{separator}";
         
-        var configureFile = $"{path}appsettings.Development.json";
+        var configureFile = $"{path}{separator}appsettings.Development.json";
         
         using var stream = new StreamReader(configureFile);
         var json = stream.ReadToEnd();

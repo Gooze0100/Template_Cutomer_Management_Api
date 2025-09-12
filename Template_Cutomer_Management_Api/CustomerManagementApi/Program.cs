@@ -23,9 +23,8 @@ await app.UseDatabase();
 
 app.UseCorsConfig();
 app.UseAuthenticationConfig();
+app.UseCache();
 
 app.MapEndpoints();
 
 app.Run();
-
-// TODO: pagalvoti apie unicode ar tipo bus var char ar ne tas pats Body ir pan??? 

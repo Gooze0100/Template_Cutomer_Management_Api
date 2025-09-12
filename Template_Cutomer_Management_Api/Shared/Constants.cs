@@ -6,6 +6,7 @@ public static class Constants
     {
         public const string DefaultConnectionString = "DefaultConnectionString";
         public const string AppSettingsSectionKey = "AppSettings";
+        public const string AuthenticationBearerSectionKey = "Authentication:Schemes:Bearer";
     }
     
     public struct CacheTags
