@@ -1,23 +1,31 @@
+using CustomerManagementApi.Startup;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.AddOpenApiServices();
+builder.AddHealthChecks();
+builder.AddConfiguration();
+builder.AddSettings();
+builder.AddDatabase();
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.AddAuthentication();
+builder.AddCors();
+builder.AddDependencies();
+builder.AddOther();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseOpenApi();
 
-app.MapControllers();
+await app.UseDatabase();
+
+app.UseCorsConfig();
+app.UseAuthenticationConfig();
+
+app.MapEndpoints();
 
 app.Run();
+
+// TODO: pagalvoti apie unicode ar tipo bus var char ar ne tas pats Body ir pan??? 

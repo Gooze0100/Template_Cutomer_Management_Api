@@ -24,13 +24,13 @@ public static class TemplateExtension
         entity.Property(p => p.Body)
             .IsRequired();
         
-        entity.Property(p => p.RemovedAt)
+        entity.Property(p => p.DeletedAt)
             .IsRequired(false);
         
-        entity.Property(p => p.RemovedBy)
+        entity.Property(p => p.DeletedBy)
             .IsRequired(false);
         
-        entity.Property(p => p.RemovedById)
+        entity.Property(p => p.DeletedById)
             .IsRequired(false);
     }
 }
