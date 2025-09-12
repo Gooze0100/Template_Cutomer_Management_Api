@@ -1,0 +1,16 @@
+﻿namespace TemplateInfrastructure;
+
+public static class Constants
+{
+    public struct Tables
+    {
+        public const string MigrationTable = "__EfMigrationHistory";
+        public const string Templates = "Templates";
+    }
+
+    public struct Schemas
+    {
+        public const string Dbo = "dbo";
+        public const string System = "system";
+    }
+}
