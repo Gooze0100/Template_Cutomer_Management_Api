@@ -1,4 +1,6 @@
 ﻿using Gateway.Settings;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 using Shared;
 
 namespace Gateway.Startup;
@@ -8,12 +10,15 @@ public static class Config
     public static void AddConfiguration(this WebApplicationBuilder builder)
     {
         builder.Configuration
+            .SetBasePath(builder.Environment.ContentRootPath)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true);
+            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true)
+            .AddOcelot("Ocelot-configuration", builder.Environment);
     }
 
     public static void AddSettings(this WebApplicationBuilder builder)
     {
+        builder.Services.AddOcelot(builder.Configuration);
         builder.Services.AddOptions();
         
         builder.Services.AddOptions<AppSettings>()
@@ -57,5 +62,10 @@ public static class Config
     public static void UseCache(this WebApplication app)
     {
         app.UseOutputCache();
+    }
+
+    public static async Task UseOcelotConfig(this WebApplication app)
+    {
+        await app.UseOcelot();
     }
 }

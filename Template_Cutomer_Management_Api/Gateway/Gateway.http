@@ -1,0 +1,4 @@
+@HttpHost = http://localhost:5229
+
+GET {{HttpHost}}/ocelot/posts/1
+Accept: application/json

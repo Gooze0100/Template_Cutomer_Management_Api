@@ -20,4 +20,5 @@ app.UseAuthorization();
 app.UseCorsConfig();
 app.UseCache();
 
+await app.UseOcelotConfig();
 await app.RunAsync();
