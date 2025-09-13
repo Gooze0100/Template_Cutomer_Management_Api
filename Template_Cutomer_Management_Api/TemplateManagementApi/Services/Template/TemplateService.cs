@@ -21,6 +21,12 @@ public class TemplateService : ITemplateService
         _databaseContext = databaseContext;
     }
     
+    /// <summary>
+    /// Get template information from database
+    /// </summary>
+    /// <param name="templateId">Id of a template in database</param>
+    /// <param name="ct">Cancellation token that can be used to cancel the operation.</param>
+    /// <returns>Template information or exception</returns>
     public async Task<Result<TemplateGetResponse, Exception>> Get(int templateId, CancellationToken ct)
     {
         try
@@ -52,6 +58,12 @@ public class TemplateService : ITemplateService
         }
     }
     
+    /// <summary>
+    /// Add new template to database
+    /// </summary>
+    /// <param name="req">The <see cref="TemplateAddRequest"/> model containing template add details.</param>
+    /// <param name="ct">Cancellation token that can be used to cancel the operation.</param>
+    /// <returns>Status of action or exception</returns>
     public async Task<UnitResult<Exception>> Add(TemplateAddRequest req, CancellationToken ct)
     {
         try
@@ -76,6 +88,12 @@ public class TemplateService : ITemplateService
         }
     }
     
+    /// <summary>
+    /// Update existing template in database
+    /// </summary>
+    /// <param name="req">The <see cref="TemplateUpdateRequest"/> model containing template update details.</param>
+    /// <param name="ct">Cancellation token that can be used to cancel the operation.</param>
+    /// <returns>Status of action or exception</returns>
     public async Task<UnitResult<Exception>> Update(TemplateUpdateRequest req, CancellationToken ct)
     {
         try
@@ -106,6 +124,12 @@ public class TemplateService : ITemplateService
         }
     }
     
+    /// <summary>
+    /// Update existing template in database
+    /// </summary>
+    /// <param name="req">The <see cref="TemplateDeleteRequest"/> model containing template update details.</param>
+    /// <param name="ct">Cancellation token that can be used to cancel the operation.</param>
+    /// <returns>Status of action or exception</returns>
     public async Task<UnitResult<Exception>> Delete(TemplateDeleteRequest req, CancellationToken ct)
     {
         try

@@ -1,0 +1,56 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/customer/{customerId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5179 }],
+      "UpstreamPathTemplate": "/customer/{customerId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "Key": "Customer",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/customer/{action}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5179 }],
+      "UpstreamPathTemplate": "/customer/{action}",
+      "UpstreamHttpMethod": [ "POST", "PATCH", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/template/{templateId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5266 }],
+      "UpstreamPathTemplate": "/template/{templateId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "Key": "Template",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/template/{action}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5266 }],
+      "UpstreamPathTemplate": "/template/{action}",
+      "UpstreamHttpMethod": [ "POST", "PATCH", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    }
+  ],
+  "Aggregates": [
+    {
+      "UpstreamPathTemplate": "/message/{customerId}/{templateId}",
+      "Aggregator": "SendMessageAggregator",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteKeys": [ "Customer", "Template" ]
+    }
+  ]
+}

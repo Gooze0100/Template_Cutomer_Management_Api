@@ -1,4 +1,8 @@
-﻿using Gateway.Settings;
+﻿using System.Text;
+using Gateway.Aggregators;
+using Gateway.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Shared;
@@ -15,10 +19,9 @@ public static class Config
             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true)
             .AddOcelot("Ocelot-configuration", builder.Environment);
     }
-
+    
     public static void AddSettings(this WebApplicationBuilder builder)
     {
-        builder.Services.AddOcelot(builder.Configuration);
         builder.Services.AddOptions();
         
         builder.Services.AddOptions<AppSettings>()
@@ -26,6 +29,42 @@ public static class Config
             .Validate(config => config.AccessControlAllowOrigin.Count > 0, "Empty access control allow origin configuration.")
             .ValidateOnStart();
     }
+    
+    public static void AddOcelotSettings(this WebApplicationBuilder builder)
+    {
+        builder.Services
+            .AddOcelot(builder.Configuration)
+            .AddSingletonDefinedAggregator<SendMessageAggregator>();
+    }
+    
+    public static void AddAuthentication(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtOptions =>
+        {
+            string[] validIssuers = builder.Configuration
+                .GetSection($"{Constants.Config.AuthenticationBearerSectionKey}:ValidIssuers").Get<string[]>();
+
+            string[] validAudiences = builder.Configuration
+                .GetSection($"{Constants.Config.AuthenticationBearerSectionKey}:ValidAudiences").Get<string[]>();
+            
+            string issuerSigningKey = builder.Configuration
+                .GetSection($"{Constants.Config.AuthenticationBearerSectionKey}:IssuerSigningKey").Get<string>();
+            
+            jwtOptions.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuers = validIssuers,
+                ValidAudiences = validAudiences,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(issuerSigningKey))
+            };
+        });
+        
+        builder.Services.AddAuthorization();
+    }
+    
     public static void AddCors(this WebApplicationBuilder builder)
     {
         builder.Services.AddCors(options =>
@@ -57,6 +96,12 @@ public static class Config
     public static void UseCorsConfig(this WebApplication app)
     {
         app.UseCors();
+    }
+    
+    public static void UseAuthenticationConfig(this WebApplication app)
+    {
+        app.UseAuthentication();
+        app.UseAuthorization();
     }
     
     public static void UseCache(this WebApplication app)

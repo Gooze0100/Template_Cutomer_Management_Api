@@ -4,21 +4,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddConfiguration();
 builder.AddSettings();
+builder.AddAuthentication();
+builder.AddOcelotSettings();
 
 builder.AddCors();
 builder.AddDependencies();
 builder.AddOther();
 
-builder.Services.AddControllers();
-
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.UseCorsConfig();
+app.UseAuthenticationConfig();
 app.UseCache();
+app.UseRouting();
 
 await app.UseOcelotConfig();
 await app.RunAsync();

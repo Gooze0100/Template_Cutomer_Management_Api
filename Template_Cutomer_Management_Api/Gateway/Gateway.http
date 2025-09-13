@@ -1,4 +1,86 @@
 @HttpHost = http://localhost:5229
+@JwtToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjNmZkYTVhNi1jNGNiLTRmZGQtOTlmMi0wNTUwMmJiM2UxNzIiLCJzdWIiOiIiLCJlbWFpbCI6IiIsIm5iZiI6MTc1Nzc4MjA3MiwiZXhwIjoxNzU3ODEwODcyLCJpYXQiOjE3NTc3ODIwNzIsImlzcyI6Imh0dHBzOi8vaWQubG9jYWxob3N0OjUwODEiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MDgxIn0.Jwap7lMCj-22H5kW_70Wpb9VnqTHnosch6C6VEtyMP4
 
-GET {{HttpHost}}/ocelot/posts/1
+### @Gateway Message 
+GET {{HttpHost}}/message/2/1
 Accept: application/json
+
+### @Customer Get
+GET {{HttpHost}}/customer/2
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+### @Customer Add
+POST {{HttpHost}}/customer/add
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "Name": "New customer 1",
+    "Email": "New@email.com"
+}
+
+### @Customer Update
+PATCH {{HttpHost}}/customer/update
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Id": 2,
+  "Name": "Updated customer 2",
+  "Email": "Updated@email.com"
+}
+
+### @Customer Delete
+DELETE {{HttpHost}}/customer/delete
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Id": 3
+}
+
+### @Template Get
+GET {{HttpHost}}/template/2
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+### @Template Add
+POST {{HttpHost}}/template/add
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Name": "New template 1",
+  "Subject": "New subject",
+  "Body": "New body, this should be quite long."
+}
+
+### @Template Update
+PATCH {{HttpHost}}/template/update
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Id": 1,
+  "Name": "Updated template 2",
+  "Subject": "Updated subject",
+  "Body": "Updated body, this should be quite long."
+}
+
+### @Template Delete
+DELETE {{HttpHost}}/template/delete
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Id": 1
+}

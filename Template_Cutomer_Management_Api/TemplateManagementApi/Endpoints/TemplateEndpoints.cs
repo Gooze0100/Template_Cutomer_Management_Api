@@ -21,7 +21,9 @@ public static class TemplateEndpoints
         {
             x.Tag(Constants.CacheTags.Template);
         }).RequireAuthorization()
-        .WithName("GetTemplate");
+        .WithName("GetTemplate")
+        .WithSummary("Get template")
+        .WithDescription("Get template by id");
 
         template.MapPost("/add", async (TemplateAddRequest req, TemplateAddValidator validator, ITemplateService service, HttpContext ctx) =>
         {
@@ -34,7 +36,8 @@ public static class TemplateEndpoints
             
             return await service.Add(req, ctx.RequestAborted).ToResponse();
         }).RequireAuthorization()
-        .WithName("AddTemplate");
+        .WithName("AddTemplate")
+        .WithSummary("Add new template");
         
         template.MapPatch("/update", async (TemplateUpdateRequest req, TemplateUpdateValidator validator, ITemplateService service, HttpContext ctx) =>
         {
@@ -47,7 +50,9 @@ public static class TemplateEndpoints
             
             return await service.Update(req, ctx.RequestAborted).ToResponse();
         }).RequireAuthorization()
-        .WithName("UpdateTemplate");
+        .WithName("UpdateTemplate")
+        .WithSummary("Update template")
+        .WithDescription("Existing template is being identified and updated by id");
         
         template.MapDelete("/delete", async ([FromBody] TemplateDeleteRequest req, TemplateDeleteValidator validator, ITemplateService service, HttpContext ctx) =>
         {
@@ -60,6 +65,8 @@ public static class TemplateEndpoints
             
             return await service.Delete(req, ctx.RequestAborted).ToResponse();
         }).RequireAuthorization()
-        .WithName("DeleteTemplate");
+        .WithName("DeleteTemplate")
+        .WithSummary("Delete template")
+        .WithDescription("No deletion is made, just added Deleted At date");
     }
 }

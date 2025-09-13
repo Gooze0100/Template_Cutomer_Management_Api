@@ -21,7 +21,7 @@ public class GenericSeed
             {
                 Name = $"Template name {i}",
                 Subject = $"Subject {i}",
-                Body = $"Body {i}, very nice <Name>, and yours <Email> ",
+                Body = $"This is body nr. {i}. " + "You have very nice name: {{name}}, and yours email is: {{email}}",
                 CreatedAt = date,
                 CreatedBy = "SYSTEM",
                 CreatedById = 1,

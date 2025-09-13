@@ -2,16 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.9" />
         <PackageReference Include="Ocelot" Version="24.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Endpoints\" />
+        <PackageReference Include="Scriban" Version="6.3.0" />
     </ItemGroup>
 
     <ItemGroup>

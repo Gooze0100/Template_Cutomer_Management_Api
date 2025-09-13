@@ -139,7 +139,6 @@ public static class Config
                 options.Theme = ScalarTheme.DeepSpace;
                 options.Layout = ScalarLayout.Modern;
                 options.HideClientButton = true;
-                
             });
         }
     }

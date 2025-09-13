@@ -15,13 +15,15 @@ public static class CustomerEndpoints
     {
         var customer = app.MapGroup("api/customer");
 
-        customer.MapGet("{customerId:int}", async (int customerId, ICustomerService service, HttpContext ctx) => 
-            await service.Get(customerId, ctx.RequestAborted).ToResponse())
+        customer.MapGet("{customerId:int}", async (int customerId, ICustomerService service, HttpContext ctx) =>
+                await service.Get(customerId, ctx.RequestAborted).ToResponse())
             .CacheOutput(x =>
-        {
-            x.Tag(Constants.CacheTags.Customer);
-        }).RequireAuthorization()
-        .WithName("GetCustomer");
+            {
+                x.Tag(Constants.CacheTags.Customer);
+            }).RequireAuthorization()
+            .WithName("GetCustomer")
+            .WithSummary("Get customer")
+            .WithDescription("Get customer by id");
 
         customer.MapPost("/add", async (CustomerAddRequest req, CustomerAddValidator validator, ICustomerService service, HttpContext ctx) =>
         {
@@ -34,7 +36,8 @@ public static class CustomerEndpoints
             
             return await service.Add(req, ctx.RequestAborted).ToResponse();
         }).RequireAuthorization()
-        .WithName("AddCustomer");
+        .WithName("AddCustomer")
+        .WithSummary("Add new customer");
         
         customer.MapPatch("/update", async (CustomerUpdateRequest req, CustomerUpdateValidator validator, ICustomerService service, HttpContext ctx) =>
         {
@@ -47,7 +50,9 @@ public static class CustomerEndpoints
             
             return await service.Update(req, ctx.RequestAborted).ToResponse();
         }).RequireAuthorization()
-        .WithName("UpdateCustomer");
+        .WithName("UpdateCustomer")
+        .WithSummary("Update customer")
+        .WithDescription("Existing customer is being identified and updated by id");
         
         customer.MapDelete("/delete", async ([FromBody] CustomerDeleteRequest req, CustomerDeleteValidator validator, ICustomerService service, HttpContext ctx) =>
         {
@@ -60,7 +65,9 @@ public static class CustomerEndpoints
             
             return await service.Delete(req, ctx.RequestAborted).ToResponse();
         }).RequireAuthorization()
-        .WithName("DeleteCustomer");
+        .WithName("DeleteCustomer")
+        .WithSummary("Delete customer")
+        .WithDescription("No deletion is made, just added Deleted At date");
     }
     
     

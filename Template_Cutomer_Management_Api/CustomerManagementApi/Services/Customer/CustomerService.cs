@@ -21,6 +21,12 @@ public class CustomerService : ICustomerService
         _databaseContext = databaseContext;
     }
 
+    /// <summary>
+    /// Get customer information from database
+    /// </summary>
+    /// <param name="customerId">Id of a customer in database</param>
+    /// <param name="ct">Cancellation token that can be used to cancel the operation.</param>
+    /// <returns>Customer information or exception</returns>
     public async Task<Result<CustomerGetResponse, Exception>> Get(int customerId, CancellationToken ct)
     {
         try
@@ -51,6 +57,12 @@ public class CustomerService : ICustomerService
         }
     }
 
+    /// <summary>
+    /// Add new customer to database
+    /// </summary>
+    /// <param name="req">The <see cref="CustomerAddRequest"/> model containing customer add details.</param>
+    /// <param name="ct">Cancellation token that can be used to cancel the operation.</param>
+    /// <returns>Status of action or exception</returns>
     public async Task<UnitResult<Exception>> Add(CustomerAddRequest req, CancellationToken ct)
     {
         try
@@ -74,6 +86,12 @@ public class CustomerService : ICustomerService
         }
     }
 
+    /// <summary>
+    /// Update existing customer in database
+    /// </summary>
+    /// <param name="req">The <see cref="CustomerUpdateRequest"/> model containing customer update details.</param>
+    /// <param name="ct">Cancellation token that can be used to cancel the operation.</param>
+    /// <returns>Status of action or exception</returns>
     public async Task<UnitResult<Exception>> Update(CustomerUpdateRequest req, CancellationToken ct)
     {
         try
@@ -103,6 +121,12 @@ public class CustomerService : ICustomerService
         }
     }
     
+    /// <summary>
+    /// Delete existing customer in database
+    /// </summary>
+    /// <param name="req">The <see cref="CustomerDeleteRequest"/> model containing customer deletion details.</param>
+    /// <param name="ct">Cancellation token that can be used to cancel the operation</param>
+    /// <returns>Status of action or exception</returns>
     public async Task<UnitResult<Exception>> Delete(CustomerDeleteRequest req, CancellationToken ct)
     {
         try

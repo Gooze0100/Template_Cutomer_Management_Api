@@ -12,8 +12,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateInfrastructure", "T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{D52B372C-4E81-4FD0-B746-C5C796142D85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSender", "MailSender\MailSender.csproj", "{291FEEE9-7BFB-43E1-A7B5-02AD4C792D9D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,9 +42,5 @@ Global
 		{D52B372C-4E81-4FD0-B746-C5C796142D85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D52B372C-4E81-4FD0-B746-C5C796142D85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D52B372C-4E81-4FD0-B746-C5C796142D85}.Release|Any CPU.Build.0 = Release|Any CPU
-		{291FEEE9-7BFB-43E1-A7B5-02AD4C792D9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{291FEEE9-7BFB-43E1-A7B5-02AD4C792D9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{291FEEE9-7BFB-43E1-A7B5-02AD4C792D9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{291FEEE9-7BFB-43E1-A7B5-02AD4C792D9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

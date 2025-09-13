@@ -1,5 +1,11 @@
 {
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5229"
+    "BaseUrl": "http://localhost:5229",
+    "RateLimitOptions": {
+      "EnableRateLimiting": true,
+      "Period": "1m",
+      "PeriodTimespan": 1,
+      "Limit": 100
+    }
   }
 }
