@@ -3,7 +3,7 @@
     {
       "DownstreamPathTemplate": "/api/customer/{customerId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "customerApi", "Port": 8080 }],
+      "DownstreamHostAndPorts": [{ "Host": "customer", "Port": 8080 }],
       "UpstreamPathTemplate": "/customer/{customerId}",
       "UpstreamHttpMethod": [ "GET" ],
       "Key": "Customer",
@@ -14,7 +14,7 @@
     {
       "DownstreamPathTemplate": "/api/customer/{action}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "customerApi", "Port": 8080 }],
+      "DownstreamHostAndPorts": [{ "Host": "customer", "Port": 8080 }],
       "UpstreamPathTemplate": "/customer/{action}",
       "UpstreamHttpMethod": [ "POST", "PATCH", "DELETE" ],
       "AuthenticationOptions": {
@@ -24,7 +24,7 @@
     {
       "DownstreamPathTemplate": "/api/template/{templateId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "templateApi", "Port": 8080 }],
+      "DownstreamHostAndPorts": [{ "Host": "template", "Port": 8080 }],
       "UpstreamPathTemplate": "/template/{templateId}",
       "UpstreamHttpMethod": [ "GET" ],
       "Key": "Template",
@@ -35,7 +35,7 @@
     {
       "DownstreamPathTemplate": "/api/template/{action}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "templateApi", "Port": 8080 }],
+      "DownstreamHostAndPorts": [{ "Host": "template", "Port": 8080 }],
       "UpstreamPathTemplate": "/template/{action}",
       "UpstreamHttpMethod": [ "POST", "PATCH", "DELETE" ],
       "AuthenticationOptions": {

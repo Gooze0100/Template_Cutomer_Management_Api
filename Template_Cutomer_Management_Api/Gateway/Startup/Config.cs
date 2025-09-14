@@ -17,7 +17,7 @@ public static class Config
             .SetBasePath(builder.Environment.ContentRootPath)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true)
-            .AddOcelot("Ocelot-configuration", builder.Environment)
+            .AddOcelot("Ocelot-configuration", builder.Environment, MergeOcelotJson.ToMemory)
             .AddEnvironmentVariables();
     }
     

@@ -21,9 +21,10 @@ services:
       retries: 10
       start_period: 10s
 
-  customerApi:
+  customer:
     build:
-      context: ./CustomerManagementApi
+      context: .
+      dockerfile: CustomerManagementApi/Dockerfile
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -34,9 +35,10 @@ services:
       - "5001:8080"
     restart: unless-stopped
 
-  templateApi:
+  template:
     build:
-      context: ./TemplateManagementApi
+      context: .
+      dockerfile: TemplateManagementApi/Dockerfile
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -49,19 +51,21 @@ services:
 
   gateway:
     build:
-      context: ./Gateway
+      context: .
+      dockerfile: Gateway/Dockerfile
     depends_on:
-      - customerApi
-      - templateApi
+      - customer
+      - template
     environment:
       ASPNETCORE_ENVIRONMENT: Development
     ports:
       - "5000:8080"
     restart: unless-stopped
     
-  authApi:
+  auth:
     build:
-      context: ./AuthApi
+      context: .
+      dockerfile: AuthApi/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
     ports:
