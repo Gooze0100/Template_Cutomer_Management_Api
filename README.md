@@ -2,9 +2,9 @@
 
 ## Instructions how to run
 ### Install Docker desktop
-	- Find compose.yaml file in application folder.
-	- Open terminal on same location as compose.yaml file.
-	- Run command docker-compose up --build, it should build and run in docker desktop new volume with containers and start sql server first, then start Apis and seed data to the databases, also build and start Gateway and AuthApi.
+- Find compose.yaml file in application folder.
+- Open terminal on same location as compose.yaml file.
+- Run command docker-compose up --build, it should build and run in docker desktop new volume with containers and start sql server first, then start Apis and seed data to the databases, also build and start Gateway and AuthApi.
 
 ### Authorization JWT
 - For usage of Apis and Gateway you need to create a JWT token. To create a token you need to go and use authApi in browser enter: http://localhost:5003/scalar/v1 and use **/login endpoint** to get token. It will be valid for **1 hour**.
@@ -16,7 +16,6 @@
 - Use **GET** request with IP http://localhost:5000/message/{customerId}/{templateId} e.g. http://localhost:5000/message/1/1 and you will send message through gateway to both Apis it will aggregate your requested customer data with template and send message (write to console). You can check that in gateway docker container if it was printed.
 
 #### Gateway
-- It has 5 main endpoints
 - GET 
 	- customer/{customerId}
 	- template/{templateId}
