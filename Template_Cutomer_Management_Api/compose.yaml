@@ -1,21 +1,44 @@
-﻿services:
+﻿volumes:
+  ctm:
+
+services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "YourStrong!Password"
+      - SA_PASSWORD=YourStrong(!)Password
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
     ports:
       - "1433:1433"
     volumes:
       - ctm:/var/opt/mssql
-    restart: unless-stopped
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P 'YourStrong(!)Password' -Q 'SELECT 1' || exit 1"  ]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+  sqlserver.configurator:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    command: >
+      bash -c '
+      /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P YourStrong(!)Password -d master -i docker-entrypoint-initdb.d/init.sql;
+      echo "All done!";
+      '
 
   customerApi:
     build:
       context: ./CustomerManagementApi
     depends_on:
-      - sqlserver
+      sqlserver:
+        condition: service_healthy
     environment:
       ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=CustomerManagement;User=sa;Password=YourStrong!Password;Encrypt=false;Application Name=CustomerManagementApi"
       ASPNETCORE_ENVIRONMENT: Development
@@ -27,7 +50,8 @@
     build:
       context: ./TemplateManagementApi
     depends_on:
-      - sqlserver
+      sqlserver:
+        condition: service_healthy
     environment:
       ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=TemplateManagement;User=sa;Password=YourStrong!Password;Encrypt=false;Application Name=TemplateManagementApi"
       ASPNETCORE_ENVIRONMENT: Development
@@ -44,6 +68,3 @@
     ports:
       - "5000:8080"
     restart: unless-stopped
-        
-volumes:
-  ctm:
