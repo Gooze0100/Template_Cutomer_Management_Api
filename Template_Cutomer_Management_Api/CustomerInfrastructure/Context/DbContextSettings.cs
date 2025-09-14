@@ -7,5 +7,5 @@ public class DbContextSettings
 
 public class ConnectionStringSettings
 {
-    public required string DefaultConnectionString { get; set; }
+    public required string DefaultConnection { get; set; }
 }

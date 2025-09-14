@@ -4,7 +4,7 @@ public static class Constants
 {
     public struct Config
     {
-        public const string DefaultConnectionString = "DefaultConnectionString";
+        public const string DefaultConnection = "DefaultConnection";
         public const string AppSettingsSectionKey = "AppSettings";
         public const string AuthenticationBearerSectionKey = "Authentication:Schemes:Bearer";
     }

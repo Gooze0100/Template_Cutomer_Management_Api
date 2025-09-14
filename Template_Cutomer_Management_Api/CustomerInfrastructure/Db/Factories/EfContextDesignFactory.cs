@@ -34,7 +34,7 @@ public class EfContextDesignFactory : IDesignTimeDbContextFactory<DatabaseContex
         var json = stream.ReadToEnd();
 
         var items = JsonSerializer.Deserialize<DbContextSettings>(json);
-        var connectionString = items?.ConnectionStrings?.DefaultConnectionString ?? String.Empty;
+        var connectionString = items?.ConnectionStrings?.DefaultConnection ?? String.Empty;
         
         return connectionString;
     }

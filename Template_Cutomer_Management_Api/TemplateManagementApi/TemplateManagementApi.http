@@ -1,4 +1,4 @@
-@HttpHost = http://localhost:5266
+@HttpHost = http://localhost:5002
 @JwtToken = 
 
 ### @Template Get

@@ -18,7 +18,8 @@ public static class Config
     {
         builder.Configuration
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true);
+            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, reloadOnChange: true)
+            .AddEnvironmentVariables();
     }
 
     public static void AddSettings(this WebApplicationBuilder builder)
@@ -44,7 +45,7 @@ public static class Config
         builder.Services.AddDbContext<IDatabaseContext, DatabaseContext>((serviceProvider, optionsBuilder) =>
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            var connectionString = configuration.GetConnectionString(Constants.Config.DefaultConnectionString);
+            var connectionString = configuration.GetConnectionString(Constants.Config.DefaultConnection);
             ArgumentNullException.ThrowIfNull(connectionString);
             
             optionsBuilder.UseSqlServer(connectionString,
@@ -109,7 +110,7 @@ public static class Config
             {
                 var configuration = serviceProvider.GetRequiredService<IConfiguration>();
                 var connectionString =
-                    configuration.GetConnectionString(Constants.Config.DefaultConnectionString);
+                    configuration.GetConnectionString(Constants.Config.DefaultConnection);
                 return connectionString!;
             }, name: "Database");
     }

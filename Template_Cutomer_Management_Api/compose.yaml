@@ -15,23 +15,11 @@ services:
       - ctm:/var/opt/mssql
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P 'YourStrong(!)Password' -Q 'SELECT 1' || exit 1"  ]
+      test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P 'YourStrong(!)Password' -C -Q 'SELECT 1' || exit 1"  ]
       interval: 10s
       timeout: 3s
       retries: 10
       start_period: 10s
-  sqlserver.configurator:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    volumes:
-      - ./init:/docker-entrypoint-initdb.d
-    depends_on:
-      sqlserver:
-        condition: service_healthy
-    command: >
-      bash -c '
-      /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P YourStrong(!)Password -d master -i docker-entrypoint-initdb.d/init.sql;
-      echo "All done!";
-      '
 
   customerApi:
     build:
@@ -40,8 +28,8 @@ services:
       sqlserver:
         condition: service_healthy
     environment:
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=CustomerManagement;User=sa;Password=YourStrong!Password;Encrypt=false;Application Name=CustomerManagementApi"
       ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=CustomerManagement;User=sa;Password=YourStrong(!)Password;Encrypt=false;Application Name=CustomerManagementApi"
     ports:
       - "5001:8080"
     restart: unless-stopped
@@ -53,18 +41,29 @@ services:
       sqlserver:
         condition: service_healthy
     environment:
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=TemplateManagement;User=sa;Password=YourStrong!Password;Encrypt=false;Application Name=TemplateManagementApi"
       ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=TemplateManagement;User=sa;Password=YourStrong(!)Password;Encrypt=false;Application Name=TemplateManagementApi"
     ports:
       - "5002:8080"
     restart: unless-stopped
-    
+
   gateway:
     build:
       context: ./Gateway
     depends_on:
       - customerApi
       - templateApi
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
     ports:
       - "5000:8080"
+    restart: unless-stopped
+    
+  authApi:
+    build:
+      context: ./AuthApi
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "5003:8080"
     restart: unless-stopped
