@@ -1,5 +1,5 @@
 @HttpHost = http://localhost:5229
-@JwtToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjNmZkYTVhNi1jNGNiLTRmZGQtOTlmMi0wNTUwMmJiM2UxNzIiLCJzdWIiOiIiLCJlbWFpbCI6IiIsIm5iZiI6MTc1Nzc4MjA3MiwiZXhwIjoxNzU3ODEwODcyLCJpYXQiOjE3NTc3ODIwNzIsImlzcyI6Imh0dHBzOi8vaWQubG9jYWxob3N0OjUwODEiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MDgxIn0.Jwap7lMCj-22H5kW_70Wpb9VnqTHnosch6C6VEtyMP4
+@JwtToken = 
 
 ### @Gateway Message 
 GET {{HttpHost}}/message/2/1

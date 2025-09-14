@@ -15,8 +15,8 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5179
+          "Host": "customerApi",
+          "Port": 8080
         }
       ],
       "DownstreamHttpMethod": null,
@@ -92,8 +92,8 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5179
+          "Host": "customerApi",
+          "Port": 8080
         }
       ],
       "DownstreamHttpMethod": null,
@@ -171,8 +171,8 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5266
+          "Host": "templateApi",
+          "Port": 8080
         }
       ],
       "DownstreamHttpMethod": null,
@@ -248,8 +248,8 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5266
+          "Host": "templateApi",
+          "Port": 8080
         }
       ],
       "DownstreamHttpMethod": null,
@@ -357,7 +357,7 @@
       "Type": ""
     },
     "MetadataOptions": {
-      "CurrentCulture": "lt-LT",
+      "CurrentCulture": "",
       "NumberStyle": "Any",
       "Separators": [
         ","

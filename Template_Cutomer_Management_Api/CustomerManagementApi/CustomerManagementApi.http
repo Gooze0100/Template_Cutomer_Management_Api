@@ -1,0 +1,41 @@
+@HttpHost = http://localhost:5179
+@JwtToken = 
+
+### @Customer Get
+GET {{HttpHost}}/api/customer/2
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+### @Customer Add
+POST {{HttpHost}}/api/customer/add
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Name": "New customer 1",
+  "Email": "New@email.com"
+}
+
+### @Customer Update
+PATCH {{HttpHost}}/api/customer/update
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Id": 2,
+  "Name": "Updated customer 2",
+  "Email": "Updated@email.com"
+}
+
+### @Customer Delete
+DELETE {{HttpHost}}/api/customer/delete
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Id": 3
+}

@@ -1,0 +1,49 @@
+﻿services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrong!Password"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ctm:/var/opt/mssql
+    restart: unless-stopped
+
+  customerApi:
+    build:
+      context: ./CustomerManagementApi
+    depends_on:
+      - sqlserver
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=CustomerManagement;User=sa;Password=YourStrong!Password;Encrypt=false;Application Name=CustomerManagementApi"
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "5001:8080"
+    restart: unless-stopped
+
+  templateApi:
+    build:
+      context: ./TemplateManagementApi
+    depends_on:
+      - sqlserver
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=TemplateManagement;User=sa;Password=YourStrong!Password;Encrypt=false;Application Name=TemplateManagementApi"
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "5002:8080"
+    restart: unless-stopped
+    
+  gateway:
+    build:
+      context: ./Gateway
+    depends_on:
+      - customerApi
+      - templateApi
+    ports:
+      - "5000:8080"
+    restart: unless-stopped
+        
+volumes:
+  ctm:

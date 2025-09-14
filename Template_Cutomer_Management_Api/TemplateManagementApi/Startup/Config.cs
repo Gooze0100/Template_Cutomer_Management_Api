@@ -48,9 +48,10 @@ public static class Config
             ArgumentNullException.ThrowIfNull(connectionString);
             
             optionsBuilder.UseSqlServer(connectionString,
-                contextOptionsBuilder =>
+                sqlOptions =>
                 {
-                    contextOptionsBuilder.MigrationsHistoryTable(Infrastructure.Tables.MigrationTable, Infrastructure.Schemas.Dbo);
+                    sqlOptions.MigrationsHistoryTable(Infrastructure.Tables.MigrationTable, Infrastructure.Schemas.Dbo);
+                    sqlOptions.EnableRetryOnFailure();
                 });
             
             optionsBuilder.UseAsyncSeeding(GenericSeed.Seed);

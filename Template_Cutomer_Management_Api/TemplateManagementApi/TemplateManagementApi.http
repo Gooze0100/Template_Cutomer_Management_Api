@@ -1,0 +1,43 @@
+@HttpHost = http://localhost:5266
+@JwtToken = 
+
+### @Template Get
+GET {{HttpHost}}/api/template/2
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+### @Template Add
+POST {{HttpHost}}/api/template/add
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Name": "New template 1",
+  "Subject": "New subject",
+  "Body": "New body, this should be quite long."
+}
+
+### @Template Update
+PATCH {{HttpHost}}/api/template/update
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Id": 1,
+  "Name": "Updated template 2",
+  "Subject": "Updated subject",
+  "Body": "Updated body, this should be quite long."
+}
+
+### @Template Delete
+DELETE {{HttpHost}}/api/template/delete
+Authorization: Bearer {{JwtToken}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Id": 1
+}
