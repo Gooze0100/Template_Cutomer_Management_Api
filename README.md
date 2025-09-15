@@ -1,6 +1,6 @@
 # Template Customer Management App
 
-## Instructions how to run app
+## Instructions how to run the app
 ### Docker desktop
 - First install Docker desktop.
 - Find compose.yaml file in application folder.
