@@ -1,4 +1,4 @@
-# Template Cutomer Management App
+# Template Customer Management App
 
 ## Instructions how to run app
 ### Docker desktop
