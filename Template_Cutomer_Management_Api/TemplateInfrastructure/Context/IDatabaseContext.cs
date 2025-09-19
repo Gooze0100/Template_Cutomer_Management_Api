@@ -6,7 +6,7 @@ namespace TemplateInfrastructure.Context;
 
 public interface IDatabaseContext : IDisposable
 {
-    DbSet<Template> Templates { get; set; }
+    DbSet<Template> Templates { get; }
     
     DatabaseFacade Database { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

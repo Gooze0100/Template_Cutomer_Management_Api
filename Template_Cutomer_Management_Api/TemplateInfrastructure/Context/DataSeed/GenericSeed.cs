@@ -15,9 +15,9 @@ public class GenericSeed
         
         var date = DateTime.UtcNow;
 
-        for (int i = 0; i <= 5; i++)
+        for (int i = 0; i <= 10000; i++)
         {
-            context.Set<Template>().Add(new Template()
+            await context.Set<Template>().AddAsync(new Template()
             {
                 Name = $"Template name {i}",
                 Subject = $"Subject {i}",
@@ -28,8 +28,7 @@ public class GenericSeed
                 UpdatedAt = date,
                 UpdatedBy = "SYSTEM",
                 UpdatedById = 1
-            });
-            
+            }, ct);
         }
     
         await context.SaveChangesAsync(ct);

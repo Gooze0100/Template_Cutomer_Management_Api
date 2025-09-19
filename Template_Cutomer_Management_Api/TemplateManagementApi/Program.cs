@@ -25,6 +25,8 @@ app.UseCorsConfig();
 app.UseAuthenticationConfig();
 app.UseCache();
 
+app.MapGet("/", () => "Hello World!");
+
 app.MapEndpoints();
 
 app.Run();

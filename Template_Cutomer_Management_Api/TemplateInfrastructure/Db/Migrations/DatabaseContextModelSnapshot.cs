@@ -73,7 +73,7 @@ namespace TemplateInfrastructure.Db.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Templates", "dbo");
+                    b.ToTable("Templates");
                 });
 #pragma warning restore 612, 618
         }

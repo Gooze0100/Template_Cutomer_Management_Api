@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
+using Shared.Db.Caching;
 using Shared.Exceptions;
 using TemplateInfrastructure.Context;
 using TemplateManagementApi.Handlers.Template.Add;
@@ -14,11 +16,20 @@ public class TemplateService : ITemplateService
 {
     private readonly ILogger<TemplateService> _logger;
     private readonly IDatabaseContext _databaseContext;
+    private readonly IEntityCacheService<Entities.Template> _cacheService;
+    private readonly HybridCache _cache;
 
-    public TemplateService(ILogger<TemplateService> logger, IDatabaseContext databaseContext)
+    public TemplateService(ILogger<TemplateService> logger, IDatabaseContext databaseContext, IEntityCacheService<Entities.Template> cacheService, HybridCache cache)
     {
         _logger = logger;
         _databaseContext = databaseContext;
+        _cacheService = cacheService;
+        _cache = cache;
+    }
+
+    public async Task<List<Entities.Template>> GetTemplatesAsync(CancellationToken ct)
+    {
+        return await _cacheService.GetCachedEntitiesAsync(ct);
     }
     
     /// <summary>
@@ -31,25 +42,26 @@ public class TemplateService : ITemplateService
     {
         try
         {
-            var template = await _databaseContext.Templates
-                .TagWithCallSite()
-                .AsNoTracking()
-                .Where(x => x.Id == templateId && x.DeletedAt == null)
-                .Select(x => new TemplateGetResponse
+            var template = _cache.GetOrCreateAsync( // set up cache
+                $"template-{templateId}", // key
+                async entry =>
                 {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Subject = x.Subject,
-                    Body = x.Body
-                })
-                .FirstOrDefaultAsync(ct);
-
-            if (template == null)
-            {
-                return new NotFoundException();
-            }
+                    return await _databaseContext.Templates
+                        .TagWithCallSite()
+                        .AsNoTracking()
+                        .Where(x => x.Id == templateId && x.DeletedAt == null)
+                        .Select(x => new TemplateGetResponse
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            Subject = x.Subject,
+                            Body = x.Body
+                        })
+                        .FirstOrDefaultAsync(entry);
+                },
+                cancellationToken: ct);
             
-            return template;
+            return await template;
         }
         catch (Exception e)
         {

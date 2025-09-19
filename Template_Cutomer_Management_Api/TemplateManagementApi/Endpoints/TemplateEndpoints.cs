@@ -15,6 +15,8 @@ public static class TemplateEndpoints
     {
         var template = app.MapGroup("api/template");
         
+        template.MapGet("", async (ITemplateService service, HttpContext ctx) => await service.GetTemplatesAsync(ctx.RequestAborted));
+        
         template.MapGet("{templateId:int}", async (int templateId, ITemplateService service, HttpContext ctx) => 
             await service.Get(templateId, ctx.RequestAborted).ToResponse())
             .CacheOutput(x =>

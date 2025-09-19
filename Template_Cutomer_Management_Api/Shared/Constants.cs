@@ -7,6 +7,7 @@ public static class Constants
         public const string DefaultConnection = "DefaultConnection";
         public const string AppSettingsSectionKey = "AppSettings";
         public const string AuthenticationBearerSectionKey = "Authentication:Schemes:Bearer";
+        public const string Redis = "Redis:Settings";
     }
     
     public struct CacheTags

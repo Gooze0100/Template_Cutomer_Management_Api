@@ -14,17 +14,31 @@ services:
     volumes:
       - ctm:/var/opt/mssql
     restart: unless-stopped
+    user: root
     healthcheck:
       test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P 'YourStrong(!)Password' -C -Q 'SELECT 1' || exit 1"  ]
       interval: 10s
       timeout: 3s
       retries: 10
       start_period: 10s
+      
+  redis:
+    image: redis:latest
+    container_name: redis-db
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   customer:
     build:
       context: .
       dockerfile: CustomerManagementApi/Dockerfile
+    container_name: customer-api
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -39,8 +53,11 @@ services:
     build:
       context: .
       dockerfile: TemplateManagementApi/Dockerfile
+    container_name: template-api
     depends_on:
       sqlserver:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -53,6 +70,7 @@ services:
     build:
       context: .
       dockerfile: Gateway/Dockerfile
+    container_name: gateway
     depends_on:
       - customer
       - template
@@ -66,6 +84,7 @@ services:
     build:
       context: .
       dockerfile: AuthApi/Dockerfile
+    container_name: auth-api
     environment:
       ASPNETCORE_ENVIRONMENT: Development
     ports:

@@ -1,8 +1,12 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Shared;
 using TemplateInfrastructure.Context;
@@ -42,12 +46,13 @@ public static class Config
 
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
-        builder.Services.AddDbContext<IDatabaseContext, DatabaseContext>((serviceProvider, optionsBuilder) =>
+        var serviceProvider = builder.Services.BuildServiceProvider();
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        var connectionString = configuration.GetConnectionString(Constants.Config.DefaultConnection);
+        ArgumentNullException.ThrowIfNull(connectionString);
+        
+        builder.Services.AddDbContext<IDatabaseContext, DatabaseContext>(optionsBuilder =>
         {
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            var connectionString = configuration.GetConnectionString(Constants.Config.DefaultConnection);
-            ArgumentNullException.ThrowIfNull(connectionString);
-            
             optionsBuilder.UseSqlServer(connectionString,
                 sqlOptions =>
                 {
@@ -128,6 +133,48 @@ public static class Config
             {
                 options.DefaultExpirationTimeSpan = TimeSpan.FromHours(2);
             });
+
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = builder.Configuration.GetSection($"{Constants.Config.Redis}:Configuration").Get<string>();
+            options.InstanceName = builder.Configuration.GetSection($"{Constants.Config.Redis}:InstanceName").Get<string>();
+        });
+        
+        builder.Services.AddHybridCache(options =>
+        {
+            options.MaximumPayloadBytes = 1024 * 1024 * 20; // 20MB The default value is 1 MB
+            options.MaximumKeyLength = 256;                // Default value is 1024 characters
+            
+            options.DefaultEntryOptions = new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromMinutes(30),          // Distributed cache expiration
+                LocalCacheExpiration = TimeSpan.FromMinutes(5)  // Local in-memory cache expiration
+            };
+        });
+
+        builder.Services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource.AddService(builder.Environment.ApplicationName))
+            .WithTracing(tracing =>
+            {
+                tracing.AddAspNetCoreInstrumentation();
+                tracing.AddHttpClientInstrumentation();
+                tracing.AddConsoleExporter();
+            })
+            .WithMetrics(metrics =>
+            {
+                metrics.AddAspNetCoreInstrumentation();
+                metrics.AddHttpClientInstrumentation();
+                metrics.AddRuntimeInstrumentation();
+                
+                metrics.AddConsoleExporter();
+            });
+
+        builder.Logging.AddOpenTelemetry(logging =>
+        {
+            logging.IncludeFormattedMessage = true;
+            logging.ParseStateValues = true;
+            logging.AddConsoleExporter();
+        });
     }
     
     public static void UseOpenApi(this WebApplication app)
